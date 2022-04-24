@@ -1,24 +1,73 @@
-
-
 import spotipy
 from spotipy.oauth2 import SpotifyClientCredentials
+import sqlite3
+import json
+import requests
+import matplotlib
+import os
+import unittest
+import csv
+import sys
+import pprint
 
-client_id = '029fecc3e8c64352b19bbdfb850eb5cd'
 
-spotify = spotipy.Spotify(client_credentials_manager=SpotifyClientCredentials())
-caesar_uri = 'spotify:artist:20wkVLutqVOYrc0kxFs7rA'
+##STEP 1: go to Spotify and receive client id, client secret, and redirect uri to set environment variables
+
+    # export SPOTIPY_CLIENT_ID='029fecc3e8c64352b19bbdfb850eb5cd'
+    # export SPOTIPY_CLIENT_SECRET='7f38c24d9b144f059df3e8dc5906edae'
+    # export SPOTIPY_REDIRECT_URI='https://open.spotify.com/playlist/37i9dQZEVXbNG2KDcFcKOF
+
+#STEP 2: Run following commands above to create local environment in terminal
+
+# def search_popularity_in_top_100(request_uri):
 
 
-results = spotify.artist_albums(caesar_uri, album_type='album')
-albums = results['items']
-while results['next']:
-    results = spotify.next(results)
-    albums.extend(results['items'])
+def setUpDatabase(db_name):
+    path = os.path.dirname(os.path.abspath(__file__))
+    conn = sqlite3.connect(path+'/'+db_name)
+    cur = conn.cursor()
+    return cur, conn
 
-for album in albums:
-    print(album['name'])
+def main():
 
-# export SPOTIPY_CLIENT_ID='029fecc3e8c64352b19bbdfb850eb5cd'
-# export SPOTIPY_CLIENT_SECRET='7f38c24d9b144f059df3e8dc5906edae'
-# export SPOTIPY_REDIRECT_URI='https://open.spotify.com/playlist/37i9dQZEVXbNG2KDcFcKOF
+    # popularity_uri = 
 
+    caesar_uri = 'spotify:artist:20wkVLutqVOYrc0kxFs7rA'
+    spotify = spotipy.Spotify(client_credentials_manager=SpotifyClientCredentials())
+
+    results = spotify.artist_top_tracks(caesar_uri, country = "US")
+    tracks = results['tracks']    
+    name = []
+    popularity = []
+    
+    for track in tracks:
+        print(track['name'])
+        print(track['popularity'])
+
+    
+    caesar_uri = 'spotify:artist:3TVXtAsR1Inumwj472S9r4'
+    spotify = spotipy.Spotify(client_credentials_manager=SpotifyClientCredentials())
+
+    results = spotify.artist_top_tracks(caesar_uri, country = "US")
+    tracks = results['tracks']    
+    name = []
+    popularity = []
+    
+    for track in tracks:
+        print(track['name'])
+        print(track['popularity'])
+
+    
+    pp = pprint.PrettyPrinter(indent = 3)
+
+
+    # print(albums)
+    
+    
+
+# for album in albums:
+#     print(album['name'])
+
+if __name__ == "__main__":
+    main()
+    unittest.main(verbosity=2)
