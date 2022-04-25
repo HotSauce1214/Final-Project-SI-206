@@ -70,12 +70,39 @@ def setUpDatabase(db_name):
     cur = conn.cursor()
     return cur, conn
 
+def create_databse1(data, cur, conn):
+    cur.execute("CREATE TABLE IF NOT EXISTS grammy_name (name_id INTEGER PRIMARY KEY, artist TEXT, year INTEGER)")
+    conn.commit()
+
+    cur.execute("SELECT MAX(name_id) FROM grammy_name")
+    curr_id = cur.fetchone()[0]
+
+    if curr_id == None:
+        curr_id = 0
+
+    for i in range(len(data)):
+        name_id = curr_id + i + 1
+        artist = data[i][0]
+        year = data[i][1]
+    
+        cur.execute("""
+                INSERT OR IGNORE INTO grammy_name (name_id, artist, year) VALUES (?,?,?)
+                """,
+                (name_id, artist, year)
+            )
+        conn.commit()
 
 
 def main():
     url = 'https://en.wikipedia.org/wiki/Grammy_Award_for_Song_of_the_Year'
 
     get_grammy_winners()
+
+    cur, conn = setUpDatabase('grammy.db')
+
+    data = get_grammy_winners
+
+    create_databse1(data, cur, conn)
 
 
 if __name__ == "__main__":
