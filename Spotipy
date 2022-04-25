@@ -51,15 +51,23 @@ def create_database(data, cur, conn):
     cur.execute("CREATE TABLE IF NOT EXISTS top_tracks (track_id INTEGER PRIMARY KEY, name TEXT, popularity INTEGER)")
     conn.commit()
 
+    cur.execute("SELECT MAX(track_id) FROM top_tracks")
+    curr_id = cur.fetchone()[0]
+    
+    if curr_id == None:
+        curr_id = 0
+
+    print(curr_id)
+
     for i in range(len(data)):
-        id = i
+        track_id = curr_id + i + 1
         name = data[i][0]
         popularity = data[i][1]
     
         cur.execute("""
                 INSERT OR IGNORE INTO top_tracks (track_id, name, popularity) VALUES (?,?,?)
                 """,
-                (id, name, popularity)
+                (track_id, name, popularity)
             )
         conn.commit()
 
@@ -117,13 +125,6 @@ def create_computation_database(average, name, cur, conn):
         )
     conn.commit()
 
-
-
-
-    
-
-
-
 def main():
     
     cur, conn = setUpDatabase('Tracks.db')
@@ -141,9 +142,6 @@ def main():
     create_computation_database(average_popularity, name, cur, conn)
 
     barChart_1(cur)
-
-
-
 
 if __name__ == "__main__":
     main()
