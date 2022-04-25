@@ -46,7 +46,7 @@ def get_grammy_winners():
     
     print(dates)
 
-    expression2 = "(\n).+[(]*"
+    expression2 = "\n(.+) \("
 
     matches2 = re.findall(expression2, dates[0])
 
