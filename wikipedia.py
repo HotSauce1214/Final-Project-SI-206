@@ -30,7 +30,7 @@ def get_grammy_winners():
     
     # print(links)
 
-    expression = '201\d'
+    expression = '\((201\d)\)'
 
     dates = []
 
@@ -43,8 +43,6 @@ def get_grammy_winners():
     dates2 = []
 
     dates2.extend(matches)
-    
-    print(dates)
 
     expression2 = "\n(.+) \("
 
@@ -54,52 +52,16 @@ def get_grammy_winners():
 
     names.extend(matches2)
 
-    print(names)
+    name_date = []
 
+    for i in range(len(names)):
+        name = names[i]
+        date = dates2[i]
+        name_date.append((name, date))
     
+    print(name_date)
 
-
-    # links = []
-
-    # expression = '201\d'
-
-    # for tag in tags:
-    #     links.append(tag.find('td'))
-
-    # print(links)
-
-    # dates = []
-
-    # for link in links:
-    #     if link == None:
-    #         continue
-    #     yo = str(link)
-    #     matches = re.findall(expression, yo)
-    #     dates.extend(matches)
-
-    # print(dates)
-
-    # date = []
-    # for tag in tags:
-    #     if '201' in tag.find('a').get('title'):
-    #         date.append(tag.text.strip())
-    
-    # print(date)
-
-    # for tag in tags:
-    #     if '' in tag.find('a').get('href'):
-
-    # wiki_url = 'https://en.wikipedia.org/wiki/Grammy_Award_for_Song_of_the_Year'
-    # table_id = 'mw-redirect'
-
-    # response =  requests.get(wiki_url)
-    # soup = BeautifulSoup(response.text, 'html.parser')
-
-    # tags = soup.find_all('table', attrs={'class': 'wikitable sortable jquery-tablesorter'})
-
-
-    
-
+    return name_date
 
 
 def setUpDatabase(db_name):
@@ -109,10 +71,12 @@ def setUpDatabase(db_name):
     return cur, conn
 
 
+
 def main():
     url = 'https://en.wikipedia.org/wiki/Grammy_Award_for_Song_of_the_Year'
 
     get_grammy_winners()
+
 
 if __name__ == "__main__":
     main()
