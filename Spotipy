@@ -129,26 +129,26 @@ def create_computation_database(average, name, cur, conn):
         )
     conn.commit()
 
-def barChart_2(cur):
-    fig = plt.figure(figsize=(10,4))
-    ax_1 = fig.add_subplot()   
-    l_1 = dict()
+# def barChart_2(cur):
+#     fig = plt.figure(figsize=(10,4))
+#     ax_2 = fig.add_subplot()   
+#     l_2 = dict()
    
-    cur.execute('SELECT id, name, average_popularity FROM average_popularity ORDER BY average_popularity DESC LIMIT 10')
-    cur_1 = cur.fetchall()
-    for row in cur_1:
-        l_1[row[0]]=row[1]
-    name = []
-    popularity=[]
-    for key,value in l_1.items():
-        name.append(key)
-        popularity.append(value)
-    name = ['\n'.join(wrap(x, 16)) for x in name]
-    ax_1.bar(name,popularity,align='center', alpha=0.5, color='red')
-    ax_1.set(xlabel='Artist', ylabel='Average Popularity per Artist (out of 100)',
-    title='Comparing the Average Popularity of Songs per Grammy Winners (2010-2019)')
-    ax_1.set_xticklabels(name,FontSize='9')
-    plt.show()
+#     cur.execute('SELECT id, name, average_popularity FROM average_popularity ORDER BY average_popularity DESC LIMIT 10')
+#     cur_1 = cur.fetchall()
+#     for row in cur_1:
+#         l_2[row[0]]=row[1]
+#     name = []
+#     popularity=[]
+#     for key,value in l_2.items():
+#         name.append(key)
+#         popularity.append(value)
+#     name = ['\n'.join(wrap(x, 16)) for x in name]
+#     ax_2.bar(name,popularity,align='center', alpha=0.5, color='red')
+#     ax_2.set(xlabel='Artist', ylabel='Average Popularity per Artist (out of 100)',
+#     title='Comparing the Average Popularity of Songs per Grammy Winners (2010-2019)')
+#     ax_2.set_xticklabels(name,FontSize='9')
+#     plt.show()
 
 
 def main():
