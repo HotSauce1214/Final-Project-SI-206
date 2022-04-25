@@ -85,6 +85,44 @@ def barChart_1(cur):
     ax_1.set_xticklabels(name,FontSize='9')
     plt.show()
 
+def get_artist_name(request_uri):
+    caesar_uri = 'spotify:artist:'+request_uri
+    spotify = spotipy.Spotify(client_credentials_manager=SpotifyClientCredentials())
+
+    results = spotify.artist(caesar_uri)
+
+    return results['name']
+
+def compute_popularity_rating(data):
+    total = 0
+
+    for i in range(len(data)):
+        total += data[i][1]
+    return float(total / 10)
+
+
+def create_computation_database(average, name, cur, conn):
+    cur.execute("CREATE TABLE IF NOT EXISTS average_popularity (id INTEGER PRIMARY KEY, name TEXT, average_popularity FLOAT)")
+    conn.commit()
+
+    
+    id = 1
+    name_artist = name
+    average_popularity = average
+    
+    cur.execute("""
+            INSERT OR IGNORE INTO average_popularity (id, name, average_popularity) VALUES (?,?,?)
+            """,
+            (id, name_artist, average_popularity)
+        )
+    conn.commit()
+
+
+
+
+    
+
+
 
 def main():
     
@@ -95,6 +133,12 @@ def main():
     data = get_artist_top_track_and_popularity(artist_uri)
 
     create_database(data, cur, conn)
+
+    average_popularity = compute_popularity_rating(data)
+
+    name = get_artist_name(artist_uri)
+
+    create_computation_database(average_popularity, name, cur, conn)
 
     barChart_1(cur)
 
