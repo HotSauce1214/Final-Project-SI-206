@@ -13,14 +13,11 @@ import pprint
 
 ##STEP 1: go to Spotify and receive client id, client secret, and redirect uri to set environment variables
 
-    # export SPOTIPY_CLIENT_ID='029fecc3e8c64352b19bbdfb850eb5cd'
-    # export SPOTIPY_CLIENT_SECRET='7f38c24d9b144f059df3e8dc5906edae'
-    # export SPOTIPY_REDIRECT_URI='https://open.spotify.com/playlist/37i9dQZEVXbNG2KDcFcKOF
+    # set SPOTIPY_CLIENT_ID='029fecc3e8c64352b19bbdfb850eb5cd'
+    # set SPOTIPY_CLIENT_SECRET='7f38c24d9b144f059df3e8dc5906edae'
+    # set SPOTIPY_REDIRECT_URI='https://open.spotify.com/playlist/37i9dQZEVXbNG2KDcFcKOF'
 
 #STEP 2: Run following commands above to create local environment in terminal
-
-# def search_popularity_in_top_100(request_uri):
-
 
 def setUpDatabase(db_name):
     path = os.path.dirname(os.path.abspath(__file__))
@@ -28,45 +25,37 @@ def setUpDatabase(db_name):
     cur = conn.cursor()
     return cur, conn
 
+def get_artist_top_track_and_popularity(request_uri):
+     # popularity_uri = 
+
+    caesar_uri = 'spotify:artist:'+request_uri
+    spotify = spotipy.Spotify(client_credentials_manager=SpotifyClientCredentials())
+
+    results = spotify.artist_top_tracks(caesar_uri, country = "US")
+    tracks = results['tracks']    
+    name = []
+    popularity = []
+    
+    for track in tracks:
+        name_track = track['name']
+        name_popularity = track['popularity']
+        name.append((name_track, name_popularity))
+    
+    print(name)
+
+
+def create_database(data, cur, conn):
+    cur.execute("CREATE TABLE IF NOT EXISTS top_tracks (track_id PRIMARY INTEGER KEY, name TEXT, popularity INTEGER)")
+    conn.commit()
+    
+
+    
+
+
 def main():
+    caesar_uri = '20wkVLutqVOYrc0kxFs7rA'
+    get_artist_top_track_and_popularity(caesar_uri)
 
-    # popularity_uri = 
-
-    caesar_uri = 'spotify:artist:20wkVLutqVOYrc0kxFs7rA'
-    spotify = spotipy.Spotify(client_credentials_manager=SpotifyClientCredentials())
-
-    results = spotify.artist_top_tracks(caesar_uri, country = "US")
-    tracks = results['tracks']    
-    name = []
-    popularity = []
-    
-    for track in tracks:
-        print(track['name'])
-        print(track['popularity'])
-
-    
-    caesar_uri = 'spotify:artist:3TVXtAsR1Inumwj472S9r4'
-    spotify = spotipy.Spotify(client_credentials_manager=SpotifyClientCredentials())
-
-    results = spotify.artist_top_tracks(caesar_uri, country = "US")
-    tracks = results['tracks']    
-    name = []
-    popularity = []
-    
-    for track in tracks:
-        print(track['name'])
-        print(track['popularity'])
-
-    
-    pp = pprint.PrettyPrinter(indent = 3)
-
-
-    # print(albums)
-    
-    
-
-# for album in albums:
-#     print(album['name'])
 
 if __name__ == "__main__":
     main()
