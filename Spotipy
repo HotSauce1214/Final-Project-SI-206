@@ -1,3 +1,4 @@
+from venv import create
 import spotipy
 from spotipy.oauth2 import SpotifyClientCredentials
 import sqlite3
@@ -41,20 +42,36 @@ def get_artist_top_track_and_popularity(request_uri):
         name_popularity = track['popularity']
         name.append((name_track, name_popularity))
     
-    print(name)
+    return name
 
 
 def create_database(data, cur, conn):
-    cur.execute("CREATE TABLE IF NOT EXISTS top_tracks (track_id PRIMARY INTEGER KEY, name TEXT, popularity INTEGER)")
+    cur.execute("CREATE TABLE IF NOT EXISTS top_tracks (track_id INTEGER PRIMARY KEY, name TEXT, popularity INTEGER)")
     conn.commit()
-    
 
+    for i in range(len(data)):
+        id = i
+        name = data[i][0]
+        popularity = data[i][1]
     
-
+        cur.execute("""
+                INSERT OR IGNORE INTO top_tracks (track_id, name, popularity) VALUES (?,?,?)
+                """,
+                (id, name, popularity)
+            )
+        conn.commit()
 
 def main():
-    caesar_uri = '20wkVLutqVOYrc0kxFs7rA'
-    get_artist_top_track_and_popularity(caesar_uri)
+    
+    cur, conn = setUpDatabase('Tracks.db')
+
+    artist_uri = '20wkVLutqVOYrc0kxFs7rA'
+    
+    data = get_artist_top_track_and_popularity(artist_uri)
+
+    create_database(data, cur, conn)
+
+
 
 
 if __name__ == "__main__":
