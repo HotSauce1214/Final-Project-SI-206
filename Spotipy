@@ -57,8 +57,6 @@ def create_database(data, cur, conn):
     if curr_id == None:
         curr_id = 0
 
-    print(curr_id)
-
     for i in range(len(data)):
         track_id = curr_id + i + 1
         name = data[i][0]
@@ -113,8 +111,14 @@ def create_computation_database(average, name, cur, conn):
     cur.execute("CREATE TABLE IF NOT EXISTS average_popularity (id INTEGER PRIMARY KEY, name TEXT, average_popularity FLOAT)")
     conn.commit()
 
+
+    cur.execute("SELECT MAX(id) FROM average_popularity")
+    curr_id = cur.fetchone()[0]
     
-    id = 1
+    if curr_id == None:
+        curr_id = 0
+    
+    id = curr_id + 1
     name_artist = name
     average_popularity = average
     
@@ -129,7 +133,7 @@ def main():
     
     cur, conn = setUpDatabase('Tracks.db')
 
-    artist_uri = '3wyVrVrFCkukjdVIdirGVY'
+    artist_uri = '4V8LLVI7PbaPR0K2TGSxFF'
     
     data = get_artist_top_track_and_popularity(artist_uri)
 
