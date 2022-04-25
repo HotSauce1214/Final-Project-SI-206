@@ -64,37 +64,39 @@ def create_database(data, cur, conn):
         conn.commit()
 
 
-    def barChart_1(cur):
-        fig = plt.figure(figsize=(10,4))
-        ax_1 = fig.add_subplot()   
-        l_1 = dict()
+def barChart_1(cur):
+    fig = plt.figure(figsize=(10,4))
+    ax_1 = fig.add_subplot()   
+    l_1 = dict()
    
-        cur.execute('SELECT name, popularity FROM top_track ORDER BY popularity DESC LIMIT 10')
-        cur_1 = cur.fetchall()
-        for row in cur_1:
-            l_1[row[0]]=row[1]
-        name = []
-        popularity=[]
-        for key,value in l_1.items():
-            name.append(key)
-            popularity.append(value)
-        name = ['\n'.join(wrap(x, 16)) for x in name]
-        ax_1.bar(name,popularity,align='center', alpha=0.5, color='red')
-        ax_1.set(xlabel='Track Name', ylabel='Popularity Rating (out of 100)',
-        title='Artist Track versus Spotify Popularity Rating')
-        ax_1.set_xticklabels(name,FontSize='9')
-        plt.show()
+    cur.execute('SELECT name, popularity FROM top_tracks ORDER BY popularity DESC LIMIT 10')
+    cur_1 = cur.fetchall()
+    for row in cur_1:
+        l_1[row[0]]=row[1]
+    name = []
+    popularity=[]
+    for key,value in l_1.items():
+        name.append(key)
+        popularity.append(value)
+    name = ['\n'.join(wrap(x, 16)) for x in name]
+    ax_1.bar(name,popularity,align='center', alpha=0.5, color='red')
+    ax_1.set(xlabel='Track Name', ylabel='Popularity Rating (out of 100)',
+    title='Artist Track versus Spotify Popularity Rating')
+    ax_1.set_xticklabels(name,FontSize='9')
+    plt.show()
 
 
 def main():
     
     cur, conn = setUpDatabase('Tracks.db')
 
-    artist_uri = '20wkVLutqVOYrc0kxFs7rA'
+    artist_uri = '3wyVrVrFCkukjdVIdirGVY'
     
     data = get_artist_top_track_and_popularity(artist_uri)
 
     create_database(data, cur, conn)
+
+    barChart_1(cur)
 
 
 
