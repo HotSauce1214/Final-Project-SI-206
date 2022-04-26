@@ -31,10 +31,10 @@ def setUpDatabase(db_name):
 def get_artist_top_track_and_popularity(request_uri):
      # popularity_uri = 
 
-    caesar_uri = 'spotify:artist:'+request_uri
+    artist_uri = 'spotify:artist:'+request_uri
     spotify = spotipy.Spotify(client_credentials_manager=SpotifyClientCredentials())
 
-    results = spotify.artist_top_tracks(caesar_uri, country = "US")
+    results = spotify.artist_top_tracks(artist_uri, country = "US")
     tracks = results['tracks']    
     name = []
     popularity = []
@@ -152,7 +152,27 @@ def barChart_2(cur):
     plt.show()
 
 def main():
+
+    #zac_brown_band = '6yJCxee7QumYr820xdIsjo'
+
+    #esperanza_spalding = '5bepW5vcdRzheNc0F8lHJ5'
     
+    #bon_iver = '4LEiUm1SRbFMgfqnQTwUbQ'
+
+    #fun = '5nCi3BB41mBaMH9gfr6Su0'
+
+    #mackelmore_and_ryan_lewis = '5BcAKTbp20cv7tC5VqPFoC'
+
+    #sam_smith = '2wY79sveU1sp5g7SokKOiI'
+
+    #meghan_trainor = '6JL8zeS1NmiOftqZTRgdTz'
+
+    #chance_the_rapper = '1anyVhU62p31KFi8MEzkbf'
+
+    #alessia_cara = '2wUjUUtkb5lvLKcGKsKqsR'
+
+    #dua_lipa = '6M2wZ9GZgrQXHCFfjv46we'
+
     cur, conn = setUpDatabase('Tracks.db')
 
     artist_uri = '6yJCxee7QumYr820xdIsjo'
