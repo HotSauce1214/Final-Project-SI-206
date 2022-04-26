@@ -71,7 +71,7 @@ def setUpDatabase(db_name):
     return cur, conn
 
 def create_databse1(data, cur, conn):
-    cur.execute("CREATE TABLE IF NOT EXISTS grammy_name (name_id INTEGER PRIMARY KEY, artist TEXT, year INTEGER)")
+    cur.execute("CREATE TABLE IF NOT EXISTS grammy_name (name_id INTEGER PRIMARY KEY, artist TEXT)")
     conn.commit()
 
     cur.execute("SELECT MAX(name_id) FROM grammy_name")
@@ -83,14 +83,36 @@ def create_databse1(data, cur, conn):
     for i in range(len(data)):
         name_id = curr_id + i + 1
         artist = data[i][0]
+        
+        cur.execute("""
+                INSERT OR IGNORE INTO grammy_name (name_id, artist) VALUES (?,?)
+                """,
+                (name_id, artist)
+            )
+        conn.commit()
+
+def create_database2(data, cur, conn):
+    cur.execute("CREATE TABLE IF NOT EXISTS grammy_year (year_id INTEGER PRIMARY KEY, year INTEGER)")
+    conn.commit()
+
+    cur.execute("SELECT MAX(year_id) FROM grammy_year")
+    curr_id = cur.fetchone()[0]
+
+    if curr_id == None:
+        curr_id = 0
+
+    for i in range(len(data)):
+        year_id = curr_id + i + 1
         year = data[i][1]
     
         cur.execute("""
-                INSERT OR IGNORE INTO grammy_name (name_id, artist, year) VALUES (?,?,?)
+                INSERT OR IGNORE INTO grammy_year (year_id, year) VALUES (?,?)
                 """,
-                (name_id, artist, year)
+                (year_id, year)
             )
         conn.commit()
+
+
 
 
 def main():
@@ -98,11 +120,21 @@ def main():
 
     get_grammy_winners()
 
-    cur, conn = setUpDatabase('grammy.db')
+    # cur, conn = setUpDatabase('grammy_name.db')
 
-    data = get_grammy_winners
+    # data = get_grammy_winners()
 
-    create_databse1(data, cur, conn)
+    # create_databse1(data, cur, conn)
+
+    cur, conn = setUpDatabase('grammy_year.db')
+
+    data = get_grammy_winners()
+
+    create_database2(data, cur, conn)
+
+
+
+
 
 
 if __name__ == "__main__":
