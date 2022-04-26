@@ -58,8 +58,6 @@ def get_grammy_winners():
         name = names[i]
         date = dates2[i]
         name_date.append((name, date))
-    
-    print(name_date)
 
     return name_date
 
@@ -113,29 +111,35 @@ def create_database2(data, cur, conn):
         conn.commit()
 
 def join_database_id(cur, conn):
-   cur.execute("""
-            SELECT artist FROM grammy_name JOIN grammy_year ON grammy_name.artist = grammy_year.year_id
-                """, )
-
-
+    cur.execute("""
+            SELECT grammy_name.artist, grammy_year.year
+        FROM grammy_year
+        JOIN grammy_name
+        ON grammy_name.name_id = grammy_year.year_id
+        WHERE grammy_name.name_id = grammy_year.year_id
+                """)
+    res = cur.fetchall()
+    conn.commit()
+    return res
 
 def main():
     url = 'https://en.wikipedia.org/wiki/Grammy_Award_for_Song_of_the_Year'
 
     get_grammy_winners()
 
-    # cur, conn = setUpDatabase('grammy_name.db')
+    cur, conn = setUpDatabase('grammy.db')
 
-    # data = get_grammy_winners()
+    data = get_grammy_winners()
 
-    # create_databse1(data, cur, conn)
-
-    cur, conn = setUpDatabase('grammy_year.db')
+    create_databse1(data, cur, conn)
 
     data = get_grammy_winners()
 
     create_database2(data, cur, conn)
 
+    joint_databse = join_database_id(cur, conn)
+
+    print(joint_databse)
 
 
 
