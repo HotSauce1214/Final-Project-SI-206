@@ -112,6 +112,10 @@ def create_database2(data, cur, conn):
             )
         conn.commit()
 
+def join_database_id(cur, conn):
+   cur.execute("""
+            SELECT artist FROM grammy_name JOIN grammy_year ON grammy_name.artist = grammy_year.year_id
+                """, )
 
 
 
